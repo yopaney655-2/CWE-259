@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.io.*;
 
 import java.sql.*;
+import java.util.Properties;
+import java.util.Arrays;
 
 public class CWE259_Hard_Coded_Password__driverManager_42 extends AbstractTestCase
 {
@@ -29,7 +31,16 @@ public class CWE259_Hard_Coded_Password__driverManager_42 extends AbstractTestCa
         String data;
 
         /* FLAW: Set data to a hardcoded string */
-        data = "7e5tc4s3";
+        char[] password = new char[0];
+        try (InputStream inputStream = new FileInputStream("application.properties")) {
+            Properties properties = new Properties();
+            properties.load(inputStream);
+            password = properties.getProperty("password").toCharArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        data = String.valueOf(password);
+        Arrays.fill(password, ' ');
 
         return data;
     }
